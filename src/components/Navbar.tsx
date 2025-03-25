@@ -17,47 +17,52 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleDarkMode }) => {
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link to="/" className="flex-shrink-0 flex items-center">
-              <div className="h-8 w-8 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-lg flex items-center justify-center">
+            <Link to="/" className="flex-shrink-0 flex items-center group">
+              <div className="h-10 w-10 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-xl flex items-center justify-center transform transition-all duration-300 group-hover:rotate-12 group-hover:scale-110">
                 <div className="relative">
-                  <FileSpreadsheet className="h-5 w-5 text-white animate-pulse" />
+                  <FileSpreadsheet className="h-6 w-6 text-white animate-pulse" />
                   <div className="absolute inset-0 bg-white opacity-20 animate-ping rounded-lg"></div>
                 </div>
               </div>
-              <span className="ml-2 text-base xs:text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent group-hover:scale-105 transition-transform duration-300 truncate">
-                Finacco
-                <span className="font-light"> Connect</span>
-              </span>
+              <div className="ml-2.5 flex flex-col">
+                <span className="text-lg xs:text-xl sm:text-2xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent group-hover:scale-105 transition-transform duration-300">
+                  Finacco
+                </span>
+                <span className="text-sm xs:text-base sm:text-lg font-light text-gray-600 dark:text-gray-400 -mt-1">
+                  Connect
+                </span>
+              </div>
             </Link>
           </div>
 
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-6">
             <Link
               to="/download"
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+              className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 relative group px-3 py-2 text-sm font-medium"
             >
-              <Download className="mr-2 h-4 w-4" />
               Download
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
             </Link>
 
-            {/*
             <Link
-              to="/pricing"
-              className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium"
+              to="/contact"
+              className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 relative group px-3 py-2 text-sm font-medium"
             >
-              Pricing
+              Contact
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
             </Link>
-            */}
+
             <Link
               to="/login"
-              className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium"
+              className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 relative group px-3 py-2 text-sm font-medium"
             >
               Login
+              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600 transform scale-x-0 transition-transform duration-300 group-hover:scale-x-100"></span>
             </Link>
 
             <button
               onClick={toggleDarkMode}
-              className="p-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="p-2 rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 transform hover:scale-110"
             >
               {isDarkMode ? (
                 <Sun className="h-5 w-5" />
@@ -98,20 +103,19 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleDarkMode }) => {
             <div className="px-2 pt-2 pb-3 space-y-2">
               <Link
                 to="/download"
-                className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 w-full"
+                className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 w-full transition-colors duration-300"
               >
-                <Download className="inline-block h-4 w-4 mr-2" />
                 Download
               </Link>
               <Link
-                to="/pricing"
-                className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 w-full"
+                to="/contact"
+                className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 w-full transition-colors duration-300"
               >
-                Pricing
+                Contact
               </Link>
               <Link
                 to="/login"
-                className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 w-full"
+                className="flex items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 w-full transition-colors duration-300"
               >
                 Login
               </Link>

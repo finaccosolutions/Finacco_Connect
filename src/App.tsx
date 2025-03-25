@@ -59,9 +59,14 @@ function App() {
             href="https://wa.me/919745524438?text=Hi,%20I%20need%20help%20with%20Business%20Bugs%20Connect%20Software."
             target="_blank"
             rel="noopener noreferrer"
-            className="fixed bottom-8 right-8 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 hover:scale-110 hover:rotate-12 transform transition-all duration-300 ease-in-out z-50 hover:shadow-xl"
+            className="fixed bottom-8 right-8 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:bg-[#128C7E] transform hover:scale-110 transition-all duration-300 group z-50"
+            aria-label="Contact us on WhatsApp"
           >
-            <MessageCircle size={24} />
+            <div className="relative">
+              <MessageCircle className="h-6 w-6 transition-transform duration-300 group-hover:rotate-12" />
+              <span className="absolute -top-1 -right-1 h-3 w-3 bg-[#25D366] rounded-full animate-ping"></span>
+              <span className="absolute -top-1 -right-1 h-3 w-3 bg-[#25D366] rounded-full"></span>
+            </div>
           </a>
           <ScrollToTop />
         </div>
