@@ -85,7 +85,8 @@ const plans = [
   },
   {
     name: 'Premium',
-    price: '₹',
+    price: '₹4,999',
+    period: '/year',
     description: 'Full access to all features',
     features: [
       'All Free Trial Features',
@@ -94,10 +95,10 @@ const plans = [
       'Priority Support',
       'Automatic Ledger Creation',
       'Unlimited Imports',
-      'Lifetime Updates',
+      'Regular Updates',
     ],
     buttonText: 'Buy Now',
-    buttonLink: '/contact',
+    buttonLink: '/buy',
   },
 ];
 

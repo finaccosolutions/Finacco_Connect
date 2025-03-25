@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { CreditCard, Mail, User, Lock, CheckCircle2 } from 'lucide-react';
-import { loadStripe } from '@stripe/stripe-js';
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 const Buy = () => {
   const [formData, setFormData] = useState({
     email: '',
     name: '',
-    cardNumber: '',
-    expiry: '',
-    cvc: '',
+    phone: '',
   });
 
   const [loading, setLoading] = useState(false);
@@ -22,7 +23,7 @@ const Buy = () => {
     setError('');
 
     try {
-      const response = await fetch('/api/create-payment-intent', {
+      const response = await fetch('https://your-hostinger-domain.com/api/create-order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -30,37 +31,56 @@ const Buy = () => {
         body: JSON.stringify({
           email: formData.email,
           name: formData.name,
+          phone: formData.phone,
+          amount: 4999 * 100, // Amount in paise
         }),
       });
 
-      const { clientSecret } = await response.json();
-      const stripe = await stripePromise;
+      const { orderId } = await response.json();
 
-      if (!stripe) {
-        throw new Error('Stripe failed to load');
-      }
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: 4999 * 100,
+        currency: "INR",
+        name: "Finacco Connect",
+        description: "Yearly Subscription",
+        order_id: orderId,
+        handler: async (response: any) => {
+          try {
+            const verifyResponse = await fetch('https://your-hostinger-domain.com/api/verify-payment', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              }),
+            });
 
-      const { error: stripeError } = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: {
-            number: formData.cardNumber,
-            exp_month: parseInt(formData.expiry.split('/')[0], 10),
-            exp_year: parseInt(formData.expiry.split('/')[1], 10),
-            cvc: formData.cvc,
-          },
-          billing_details: {
-            name: formData.name,
-            email: formData.email,
-          },
+            const { success } = await verifyResponse.json();
+            if (success) {
+              window.location.href = '/payment-success';
+            } else {
+              setError('Payment verification failed');
+            }
+          } catch (err) {
+            setError('Payment verification failed');
+          }
         },
-      });
+        prefill: {
+          name: formData.name,
+          email: formData.email,
+          contact: formData.phone,
+        },
+        theme: {
+          color: "#2563EB",
+        },
+      };
 
-      if (stripeError) {
-        throw new Error(stripeError.message);
-      }
-
-      // Payment successful, redirect to success page
-      window.location.href = '/payment-success';
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Payment failed');
     } finally {
@@ -69,27 +89,9 @@ const Buy = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let { name, value } = e.target;
-
-    // Format expiry date
-    if (name === 'expiry') {
-      value = value
-        .replace(/\D/g, '')
-        .slice(0, 4)
-        .replace(/(\d{2})(\d)/, '$1/$2');
-    }
-
-    // Format card number with spaces
-    if (name === 'cardNumber') {
-      value = value
-        .replace(/\D/g, '')
-        .slice(0, 16)
-        .replace(/(\d{4})(?=\d)/g, '$1 ');
-    }
-
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -104,10 +106,10 @@ const Buy = () => {
               <div className="space-y-4">
                 <div className="flex items-center">
                   <Lock className="h-5 w-5 mr-2" />
-                  <span>Lifetime License</span>
+                  <span>Yearly Subscription</span>
                 </div>
-                <div className="text-4xl font-bold">₹4,999</div>
-                <p className="text-blue-100">One-time payment, lifetime updates</p>
+                <div className="text-4xl font-bold">₹4,999/year</div>
+                <p className="text-blue-100">Automatic renewal, cancel anytime</p>
                 
                 <div className="border-t border-blue-400 pt-4 mt-6">
                   <h3 className="font-semibold mb-3">What's included:</h3>
@@ -118,7 +120,7 @@ const Buy = () => {
                     </li>
                     <li className="flex items-center">
                       <CheckCircle2 className="h-5 w-5 mr-2" />
-                      Lifetime Updates
+                      Regular Updates
                     </li>
                     <li className="flex items-center">
                       <CheckCircle2 className="h-5 w-5 mr-2" />
@@ -176,52 +178,17 @@ const Buy = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Card Number
+                    Phone Number
                   </label>
                   <div className="relative">
                     <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                     <input
-                      type="text"
-                      name="cardNumber"
-                      value={formData.cardNumber}
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
                       onChange={handleChange}
-                      placeholder="1234 5678 9012 3456"
                       className="pl-10 w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2 px-4 text-gray-900 dark:text-white"
                       required
-                      maxLength={19}
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Expiry Date
-                    </label>
-                    <input
-                      type="text"
-                      name="expiry"
-                      value={formData.expiry}
-                      onChange={handleChange}
-                      placeholder="MM/YY"
-                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2 px-4 text-gray-900 dark:text-white"
-                      required
-                      maxLength={5}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      CVC
-                    </label>
-                    <input
-                      type="text"
-                      name="cvc"
-                      value={formData.cvc}
-                      onChange={handleChange}
-                      placeholder="123"
-                      className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2 px-4 text-gray-900 dark:text-white"
-                      required
-                      maxLength={3}
                     />
                   </div>
                 </div>
@@ -237,11 +204,11 @@ const Buy = () => {
                   disabled={loading}
                   className="w-full bg-gradient-to-r from-green-600 to-emerald-500 text-white py-3 px-6 rounded-lg font-semibold hover:from-green-700 hover:to-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 transition-all duration-300 transform hover:scale-105"
                 >
-                  {loading ? 'Processing...' : 'Pay ₹4,999'}
+                  {loading ? 'Processing...' : 'Pay ₹4,999/year'}
                 </button>
 
                 <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-4">
-                  Secure payment powered by Stripe
+                  Secure payment powered by Razorpay
                 </p>
               </form>
             </div>
