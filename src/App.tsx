@@ -19,6 +19,7 @@ import VideoTutorials from './pages/VideoTutorials';
 import Templates from './pages/Templates';
 import Updates from './pages/Updates';
 import Documentation from './pages/Documentation';
+import Buy from './pages/Buy';
 import ScrollToTop from './components/ScrollToTop';
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
             <Route path="/templates" element={<Templates />} />
             <Route path="/updates" element={<Updates />} />
             <Route path="/docs" element={<Documentation />} />
+            <Route path="/buy" element={<Buy />} />
           </Routes>
           
           {/* WhatsApp Fixed Button */}
@@ -75,4 +77,4 @@ function App() {
   );
 }
 
-export default App;
+export default App
