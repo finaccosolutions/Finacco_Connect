@@ -18,10 +18,7 @@ const Home = () => {
           <div className="lg:grid lg:grid-cols-12 lg:gap-8 flex flex-col-reverse lg:flex-row">
             <div className="text-center lg:text-left md:max-w-2xl md:mx-auto lg:col-span-6">
               <h1 className="text-3xl tracking-tight font-extrabold sm:text-4xl md:text-5xl lg:text-6xl mt-8 lg:mt-0">
-                <span className="block text-gray-900 dark:text-white">Finacco Connect</span>
-                <span className="block text-gray-900 dark:text-white">
-                  Transform Your Financial Data
-                </span>
+                <span className="block text-gray-900 dark:text-white">Transform Your Financial Data</span>
               </h1>
               <p className="mt-3 text-sm sm:text-base text-gray-500 dark:text-gray-400 sm:mt-5 lg:text-lg xl:text-xl">
                 Seamlessly integrate Excel with Tally Prime for efficient financial management
@@ -71,22 +68,26 @@ const Home = () => {
       <section className="py-16 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-gray-900 dark:text-white">20+</div>
-              <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">Template Types</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-gray-900 dark:text-white">100%</div>
-              <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">Tally Compatible</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-gray-900 dark:text-white">&lt;2min</div>
-              <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">Setup Time</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-gray-900 dark:text-white">Free</div>
-              <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">14-Day Trial</div>
-            </div>
+            {stats.map((stat, index) => (
+              <div key={index} className="relative group">
+                {/* Decorative background */}
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-cyan-500/5 rounded-2xl transform group-hover:scale-105 transition-transform duration-300"></div>
+                
+                {/* Content */}
+                <div className="relative p-6 text-center transform transition-all duration-300 group-hover:translate-y-[-5px]">
+                  <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent mb-2 transform transition-all duration-300 group-hover:scale-110">
+                    {stat.value}
+                  </div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400 font-medium">
+                    {stat.label}
+                  </div>
+                  
+                  {/* Decorative elements */}
+                  <div className="absolute top-0 right-0 -mr-3 -mt-3 w-24 h-24 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute bottom-0 left-0 -ml-3 -mb-3 w-24 h-24 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -262,6 +263,25 @@ const Home = () => {
     </div>
   );
 };
+
+const stats = [
+  {
+    value: '20+',
+    label: 'Template Types',
+  },
+  {
+    value: '100%',
+    label: 'Tally Compatible',
+  },
+  {
+    value: '<2min',
+    label: 'Setup Time',
+  },
+  {
+    value: 'Free',
+    label: '14-Day Trial',
+  },
+];
 
 const features = [
   {

@@ -24,14 +24,9 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleDarkMode }) => {
                   <div className="absolute inset-0 bg-white opacity-20 animate-ping rounded-lg"></div>
                 </div>
               </div>
-              <div className="ml-2.5 flex flex-col">
-                <span className="text-lg xs:text-xl sm:text-2xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent group-hover:scale-105 transition-transform duration-300">
-                  Finacco
-                </span>
-                <span className="text-sm xs:text-base sm:text-lg font-light text-gray-600 dark:text-gray-400 -mt-1">
-                  Connect
-                </span>
-              </div>
+              <span className="ml-2.5 text-2xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent group-hover:scale-105 transition-transform duration-300">
+                Finacco Connect
+              </span>
             </Link>
           </div>
 
