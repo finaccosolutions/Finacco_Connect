@@ -48,13 +48,7 @@ const Home = () => {
                     className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 transform hover:scale-105 transition-all w-full sm:w-auto"
                   >
                     <Download className="mr-2 h-5 w-5" />
-                    Download Now
-                  </Link>
-                  <Link
-                    to="/buy"
-                    className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 transform hover:scale-105 transition-all w-full sm:w-auto"
-                  >
-                    Buy Now
+                    Download
                   </Link>
                 </div>
               </div>
