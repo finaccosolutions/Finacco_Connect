@@ -1,12 +1,6 @@
 import React, { useState } from 'react';
 import { CreditCard, Mail, User, Lock, CheckCircle2 } from 'lucide-react';
 
-declare global {
-  interface Window {
-    Razorpay: any;
-  }
-}
-
 const Buy = () => {
   const [formData, setFormData] = useState({
     email: '',
@@ -23,64 +17,8 @@ const Buy = () => {
     setError('');
 
     try {
-      const response = await fetch('https://your-hostinger-domain.com/api/create-order', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          name: formData.name,
-          phone: formData.phone,
-          amount: 4999 * 100, // Amount in paise
-        }),
-      });
-
-      const { orderId } = await response.json();
-
-      const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-        amount: 4999 * 100,
-        currency: "INR",
-        name: "Finacco Connect",
-        description: "Yearly Subscription",
-        order_id: orderId,
-        handler: async (response: any) => {
-          try {
-            const verifyResponse = await fetch('https://your-hostinger-domain.com/api/verify-payment', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-              }),
-            });
-
-            const { success } = await verifyResponse.json();
-            if (success) {
-              window.location.href = '/payment-success';
-            } else {
-              setError('Payment verification failed');
-            }
-          } catch (err) {
-            setError('Payment verification failed');
-          }
-        },
-        prefill: {
-          name: formData.name,
-          email: formData.email,
-          contact: formData.phone,
-        },
-        theme: {
-          color: "#2563EB",
-        },
-      };
-
-      const razorpay = new window.Razorpay(options);
-      razorpay.open();
+      // Implement your payment processing logic here
+      console.log('Processing payment:', formData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Payment failed');
     } finally {
@@ -208,7 +146,7 @@ const Buy = () => {
                 </button>
 
                 <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-4">
-                  Secure payment powered by Razorpay
+                  Secure payment processing
                 </p>
               </form>
             </div>

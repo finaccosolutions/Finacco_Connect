@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Download, Moon, Sun, FileSpreadsheet, Menu, X } from 'lucide-react';
+import { Download, Moon, Sun, Menu, X } from 'lucide-react';
 
 interface NavbarProps {
   isDarkMode: boolean;
@@ -14,17 +14,16 @@ const Navbar: React.FC<NavbarProps> = ({ isDarkMode, toggleDarkMode }) => {
 
   return (
     <nav className="bg-white dark:bg-gray-900 shadow-lg fixed w-full z-50">
-      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-0 sm:px-2 lg:px-4">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
-           <Link to="/" className="flex-shrink-0 flex items-center group">
-            <img
-              src="https://finaccosolutions.com/connect/images/Finacco Logo.png"
-              alt="Finacco Connect"
-              className="h-[220px] w-auto object-contain transition-transform duration-300 hover:scale-105"
-            />
-          </Link>
-
+          <div className="flex-shrink-0 pl-2">
+            <Link to="/" className="flex items-center group -ml-4">
+              <img
+                src="https://finaccosolutions.com/connect/images/Finacco Logo.png"
+                alt="Finacco Connect"
+                className="h-[220px] w-auto object-contain transform transition-all duration-500 group-hover:scale-110 group-hover:brightness-110"
+              />
+            </Link>
           </div>
 
           <div className="hidden md:flex items-center space-x-6">
