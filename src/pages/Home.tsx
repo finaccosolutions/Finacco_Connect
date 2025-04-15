@@ -92,29 +92,30 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Video Section */}
-      <section className="py-24 bg-gray-50 dark:bg-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent sm:text-4xl">
-              See It in Action
-            </h2>
-            <p className="mt-4 text-lg sm:text-xl text-gray-600 dark:text-gray-400">
-              Watch how Finacco Connect transforms your financial workflow
-            </p>
+        {/* Video Section */}
+        <section className="py-24 bg-gray-50 dark:bg-gray-800">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
+            <div className="text-center mb-12">
+              <h2 className="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent                         sm:text-4xl">
+                See It in Action
+              </h2>
+              <p className="mt-4 text-lg sm:text-xl text-gray-600 dark:text-gray-400">
+                Watch how Finacco Connect transforms your financial workflow
+              </p>
+            </div>
+            <div className="relative aspect-video rounded-xl overflow-hidden shadow-2xl transform hover:scale-[1.02] transition-all                         duration-300">
+              <iframe
+                className="absolute inset-0 w-full h-full"
+                src="https://www.youtube.com/embed/nv5PMVUXMcs"
+                title="Finacco Connect Demo"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
           </div>
-          <div className="relative aspect-video rounded-xl overflow-hidden shadow-2xl transform hover:scale-[1.02] transition-all duration-300">
-            <iframe
-              className="absolute inset-0 w-full h-full"
-              src="https://www.youtube.com/embed/your-video-id"
-              title="Finacco Connect Demo"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          </div>
-        </div>
-      </section>
+        </section>
+
 
       {/* How It Works Section */}
       <section className="py-16 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 relative overflow-hidden">
