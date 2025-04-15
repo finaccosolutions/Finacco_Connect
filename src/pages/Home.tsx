@@ -282,7 +282,7 @@ const stats = [
   },
   {
     value: 'Free',
-    label: '14-Day Trial',
+    label: 'to use completely',
   },
 ];
 

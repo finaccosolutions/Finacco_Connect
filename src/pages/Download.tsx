@@ -26,7 +26,7 @@ const DownloadPage = () => {
                 Download Now
               </a>
               <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                Version 1.0.0 | Windows x64
+                Version 1.2.0.0 | Windows x64
               </p>
             </div>
 
@@ -68,7 +68,7 @@ const requirements = [
   },
   {
     title: 'Processor & RAM',
-    description: 'Intel Core i3 or better, 4GB RAM minimum',
+    description: 'Intel Core i3 or better, 4GB RAM for best performance',
     icon: Cpu,
   },
   {
