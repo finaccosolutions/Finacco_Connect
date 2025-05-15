@@ -50,6 +50,13 @@ const Home = () => {
                     <Download className="mr-2 h-5 w-5" />
                     Download
                   </Link>
+                  <Link
+                    to="/buy"
+                    className="inline-flex items-center justify-center px-6 py-3 border-2 border-blue-600 text-base font-medium rounded-md text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-900/20 transform hover:scale-105 transition-all w-full sm:w-auto"
+                  >
+                    Buy Now
+
+                  </Link>
                 </div>
               </div>
             </div>
