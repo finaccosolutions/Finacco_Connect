@@ -13,6 +13,15 @@ const DownloadPage = () => {
   useEffect(() => {
     const fetchVersionInfo = async () => {
       const endpoints = [
+        // Try local proxy first (development)
+        {
+          url: '/api/version',
+          options: {
+            headers: {
+              'Accept': 'text/plain',
+            }
+          }
+        },
         // Primary endpoint with forced browser headers
         {
           url: 'https://finaccosolutions.com/connect/updates/version.txt',
@@ -29,11 +38,6 @@ const DownloadPage = () => {
           url: `https://api.allorigins.win/raw?url=${encodeURIComponent(
             'https://finaccosolutions.com/connect/updates/version.txt'
           )}`,
-          options: {}
-        },
-        // Final fallback (mirror your version.txt elsewhere)
-        {
-          url: 'https://raw.githubusercontent.com/yourusername/yourrepo/main/version.txt',
           options: {}
         }
       ];
@@ -79,6 +83,14 @@ const DownloadPage = () => {
     fetchVersionInfo().finally(() => setLoading(false));
   }, []);
 
+  const handleDownload = () => {
+    // Always use the direct URL - no proxy for downloads
+    const downloadUrl = 'https://finaccosolutions.com/connect/download-counter.php?file=Finacco_Setup.exe';
+    
+    // Open in new window/tab to trigger download
+    window.open(downloadUrl, '_blank');
+  };
+
   return (
     <div className="pt-24 pb-16 min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -109,30 +121,18 @@ const DownloadPage = () => {
                 )}
               </div>
 
-              <a
-                href={versionInfo.url}
-                className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
-                download="Finacco_Setup.exe"
+              <button
+                onClick={handleDownload}
+                className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors transform hover:scale-105 duration-300"
+                disabled={loading}
               >
                 <Download className="mr-2 h-5 w-5" />
                 {loading ? "Loading..." : `Download v${versionInfo.version}`}
-              </a>
+              </button>
               <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                Windows 10/11 (64-bit)
+                Windows 10/11 (64-bit) • 60+ MB
               </p>
             </div>
-
-            {/* Changelog
-            {versionInfo.changelog && (
-              <div className="mt-8 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <h3 className="font-semibold text-lg mb-2 dark:text-white">
-                  What's New in v{versionInfo.version}
-                </h3>
-                <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">
-                  {versionInfo.changelog}
-                </p>
-              </div>
-            )} */}
 
             {/* System Requirements */}
             <div className="mt-12">

@@ -8,16 +8,19 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/api': {
+      // Only proxy version checking, not downloads
+      '/api/version': {
         target: 'https://finaccosolutions.com/connect/updates',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      },
-      '/download-api': {
-        target: 'https://finaccosolutions.com/connect/download',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/download-api/, ''),
-      },
+        secure: true,
+        rewrite: (path) => path.replace(/^\/api\/version/, '/version.txt'),
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+          'Accept': 'text/plain,*/*',
+          'Referer': 'https://finaccosolutions.com'
+        }
+      }
+      // Removed download proxy - downloads will go directly to the server
     },
   },
 })
