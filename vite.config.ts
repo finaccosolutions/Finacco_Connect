@@ -13,6 +13,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
+      '/download-api': {
+        target: 'https://finaccosolutions.com/connect/download',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/download-api/, ''),
+      },
     },
   },
 })

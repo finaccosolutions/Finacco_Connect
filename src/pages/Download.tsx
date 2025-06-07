@@ -1,104 +1,173 @@
 import React, { useEffect, useState } from "react";
-import { Download, Monitor, Cpu, Database, AlertCircle } from "lucide-react";
+import { Download, Monitor, Cpu, Database, AlertCircle, Loader2 } from "lucide-react";
 
 const DownloadPage = () => {
   const [versionInfo, setVersionInfo] = useState({
-    version: "1.2.0.0", // Default version
-    url: "https://finaccosolutions.com/connect/download/Finacco_Setup.exe", // Default URL
-    changelog: "",
+    version: "1.5.5.0", // Default if all fetches fail
+    url: "https://finaccosolutions.com/connect/download-counter.php?file=Finacco_Setup.exe",
+    changelog: "**Latest updates**"
   });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchVersionInfo = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        
-        const res = await fetch("/api/version.txt");
-        if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}, ${res.statusText}`);
+      const endpoints = [
+        // Primary endpoint with forced browser headers
+        {
+          url: 'https://finaccosolutions.com/connect/updates/version.txt',
+          options: {
+            headers: {
+              'Accept': 'text/plain',
+              'User-Agent': 'Mozilla/5.0',
+              'Referer': 'https://finaccosolutions.com'
+            }
+          }
+        },
+        // Fallback with CORS proxy
+        {
+          url: `https://api.allorigins.win/raw?url=${encodeURIComponent(
+            'https://finaccosolutions.com/connect/updates/version.txt'
+          )}`,
+          options: {}
+        },
+        // Final fallback (mirror your version.txt elsewhere)
+        {
+          url: 'https://raw.githubusercontent.com/yourusername/yourrepo/main/version.txt',
+          options: {}
         }
-        
-        const data = await res.text();
-        const lines = data.split("\n");
-        const info: any = {};
-        
-        lines.forEach((line) => {
-          const [key, ...rest] = line.split("=");
-          info[key.trim().toLowerCase()] = rest.join("=").trim();
-        });
+      ];
 
-        setVersionInfo({
-          version: info.version || versionInfo.version,
-          url: info.downloadurl || versionInfo.url,
-          changelog: info.changelog || "",
-        });
-      } catch (err) {
-        console.error("Error loading version info:", err);
-        setError("Unable to fetch latest version information. Using default version.");
-      } finally {
-        setLoading(false);
+      for (const { url, options } of endpoints) {
+        try {
+          console.log(`Trying: ${url}`); // Debug
+          const res = await fetch(url, {
+            ...options,
+            cache: 'no-store',
+            mode: 'cors'
+          });
+
+          if (!res.ok) continue;
+
+          const text = await res.text();
+          console.log("Raw response:", text); // Debug
+
+          // Parse version.txt (supports multiple formats)
+          const data = text.split('\n').reduce((acc, line) => {
+            const [key, value] = line.split('=').map(s => s.trim());
+            if (key && value) acc[key.toLowerCase()] = value;
+            return acc;
+          }, {} as Record<string, string>);
+
+          if (data.version) {
+            setVersionInfo({
+              version: data.version,
+              url: data.downloadurl || data.url || versionInfo.url,
+              changelog: data.changelog || versionInfo.changelog
+            });
+            setError(null);
+            return;
+          }
+        } catch (err) {
+          console.warn(`Failed from ${url}:`, err);
+        }
       }
+
+      setError("Couldn't fetch updates. Showing latest known version.");
     };
 
-    fetchVersionInfo();
+    fetchVersionInfo().finally(() => setLoading(false));
   }, []);
 
   return (
-    <div className="pt-24 pb-16">
+    <div className="pt-24 pb-16 min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white sm:text-5xl">
             Download Finacco Connect
           </h1>
           <p className="mt-4 text-xl text-gray-600 dark:text-gray-400">
-            Get started with seamless Tally Prime data management
+            {versionInfo.version ? `Version ${versionInfo.version}` : "Loading version..."}
           </p>
         </div>
 
         <div className="mt-12">
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+            {error && (
+              <div className="mb-6 flex items-center text-amber-600 bg-amber-50 dark:bg-amber-900/20 px-4 py-2 rounded-lg">
+                <AlertCircle className="h-5 w-5 mr-2" />
+                <span>{error}</span>
+              </div>
+            )}
+
+            {/* Download Section */}
             <div className="flex flex-col items-center">
-              {error && (
-                <div className="mb-6 flex items-center text-amber-600 bg-amber-50 dark:bg-amber-900/20 dark:text-amber-400 px-4 py-2 rounded-lg">
-                  <AlertCircle className="h-5 w-5 mr-2" />
-                  <span>{error}</span>
-                </div>
-              )}
-              
-              <Download className="h-16 w-16 text-blue-600 mb-6" />
+              <div className="relative mb-6">
+                <Download className="h-16 w-16 text-blue-600" />
+                {loading && (
+                  <Loader2 className="absolute -top-2 -right-2 h-8 w-8 text-blue-400 animate-spin" />
+                )}
+              </div>
+
               <a
                 href={versionInfo.url}
-                className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors"
-                download
+                className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
+                download="Finacco_Setup.exe"
               >
                 <Download className="mr-2 h-5 w-5" />
-                Download Now
+                {loading ? "Loading..." : `Download v${versionInfo.version}`}
               </a>
               <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                Version {versionInfo.version} | Windows x64
+                Windows 10/11 (64-bit)
               </p>
             </div>
 
+            {/* Changelog
+            {versionInfo.changelog && (
+              <div className="mt-8 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <h3 className="font-semibold text-lg mb-2 dark:text-white">
+                  What's New in v{versionInfo.version}
+                </h3>
+                <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">
+                  {versionInfo.changelog}
+                </p>
+              </div>
+            )} */}
+
+            {/* System Requirements */}
             <div className="mt-12">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
                 System Requirements
               </h2>
               <div className="grid gap-6 md:grid-cols-3">
-                {requirements.map((req, index) => (
+                {[
+                  {
+                    icon: Monitor,
+                    title: "OS",
+                    desc: "Windows 10/11 (64-bit)"
+                  },
+                  {
+                    icon: Cpu,
+                    title: "Hardware",
+                    desc: "Intel i3+ • 4GB RAM"
+                  },
+                  {
+                    icon: Database,
+                    title: "Software",
+                    desc: "Tally Prime"
+                  }
+                ].map((item, index) => (
                   <div
                     key={index}
-                    className="flex items-start space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg transition-all hover:shadow-md"
+                    className="flex items-start gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:shadow-md transition-shadow"
                   >
-                    <req.icon className="h-6 w-6 text-blue-600 flex-shrink-0" />
+                    <item.icon className="h-6 w-6 text-blue-600 mt-1 flex-shrink-0" />
                     <div>
                       <h3 className="font-semibold text-gray-900 dark:text-white">
-                        {req.title}
+                        {item.title}
                       </h3>
-                      <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                        {req.description}
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {item.desc}
                       </p>
                     </div>
                   </div>
@@ -111,23 +180,5 @@ const DownloadPage = () => {
     </div>
   );
 };
-
-const requirements = [
-  {
-    title: "Operating System",
-    description: "Windows 10 or later (64-bit)",
-    icon: Monitor,
-  },
-  {
-    title: "Processor & RAM",
-    description: "Intel Core i3 or better, 4GB RAM for best performance",
-    icon: Cpu,
-  },
-  {
-    title: "Software",
-    description: "Tally Prime",
-    icon: Database,
-  },
-];
 
 export default DownloadPage;
